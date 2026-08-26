@@ -1,0 +1,59 @@
+Build Oniux & Create an x86_64 AppImage
+=======================================
+
+Install Rust
+------------
+   $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+Build & Test Oniux
+------------------
+   $ mkdir oniux 
+   $ cd oniux/
+   $ unzip oniux-main.zip 
+   $ cd oniux-main/
+   $ cargo build
+   $ sudo ./target/debug/oniux curl https://check.torproject.org
+   $ cargo build --release
+   $ sudo ./build/release/oniux curl http://sdfox7.com
+
+Create an AppImage
+------------------
+   Download the appimagetool from: https://github.com/AppImage/appimagetool/releases
+   $ chmod a+x appimagetool-x86_64.AppImage
+
+   Install zsync
+   $ sudo apt-get install zsync
+
+   Create the directory structure
+   $ mkdir -p AppDir/usr/bin
+
+   Copy oniux into the dir "AppDir/usr/bin"
+   cp oniux-main/build/release/oniux AppDir/usr/bin/
+
+   Create AppDir/oniux.desktop file
+   [Desktop Entry]
+   Type=Application
+   Name=Oniux
+   Exec=oniux
+   Icon=oniux
+   Categories=Utility;
+
+   Create a custom icon from Onion.jpg
+   $ convert Onion.jpg -geometry 256x256 -gravity center oniux.png
+   $ mv oniux.png AppDir/
+
+   Create AppDir/AppRun
+   #!/bin/bash
+   exec $APPDIR/usr/bin/oniux "$@"
+   
+   NB: "$@" allows command line arguments (e.g. curl URL) to be passed to oniux
+
+   Make the AppRun file executable
+   $chmod a+x ./AppDir/AppRun  
+
+   Create the AppImage
+   $ ARCH=x86_64 ./appimagetool-x86_64.AppImage ./AppDir ./oniux.AppImage
+
+   Test the AppImage
+   $ sudo ./oniux.AppImage curl http://www.sdfox7.com
+
