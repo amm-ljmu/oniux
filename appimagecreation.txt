@@ -55,5 +55,5 @@ Create an AppImage
    $ ARCH=x86_64 ./appimagetool-x86_64.AppImage ./AppDir ./oniux.AppImage
 
    Test the AppImage
-   $ sudo ./oniux.AppImage curl http://www.sdfox7.com
+   $ sudo ./oniux.AppImage curl <URL>
 
